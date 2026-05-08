@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>失物招领系统 - 发布失物</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .header {
+            max-width: 1000px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
+        .header a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        .publish-box {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group label .required {
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 45px;
+            background: #3498db;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #2980b9;
+        }
+
+        .tip {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>发布失物/招领信息</h1>
+        <a href="index.html">返回首页</a>
+    </div>
+
+    <div class="publish-box">
+        <form id="publishForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>信息类型 <span class="required">*</span></label>
+                    <select name="type" required>
+                        <option value="lost">失物招领</option>
+                        <option value="found">物品招领</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>物品名称 <span class="required">*</span></label>
+                    <input type="text" name="name" placeholder="请输入物品名称" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>物品分类 <span class="required">*</span></label>
+                    <select name="category" required>
+                        <option value="证件">证件类</option>
+                        <option value="电子">电子产品</option>
+                        <option value="服饰">服饰箱包</option>
+                        <option value="文具">学习用品</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>丢失/拾取地点 <span class="required">*</span></label>
+                    <input type="text" name="location" placeholder="请输入详细地点" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>丢失/拾取时间 <span class="required">*</span></label>
+                    <input type="datetime-local" name="time" required>
+                </div>
+                <div class="form-group">
+                    <label>联系电话 <span class="required">*</span></label>
+                    <input type="text" name="phone" placeholder="请输入联系电话" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>物品描述 <span class="required">*</span></label>
+                <textarea name="description" placeholder="请详细描述物品特征、丢失/拾取情况等信息" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>物品图片</label>
+                <input type="file" name="image" accept="image/*">
+                <p class="tip">支持jpg/png格式，单张图片不超过5MB（可选）</p>
+            </div>
+
+            <button type="submit" class="btn-submit">提交发布</button>
+        </form>
+    </div>
+
+    <script>
+        // 发布表单提交事件（后续对接Java后端接口）
+        document.getElementById('publishForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // 阻止表单默认提交
+            const formData = new FormData(this);
+
+            // 前端基础校验（已通过HTML required属性实现，这里做补充）
+            const type = formData.get('type');
+            const name = formData.get('name');
+            const location = formData.get('location');
+            const time = formData.get('time');
+            const phone = formData.get('phone');
+            const description = formData.get('description');
+
+            if (!type || !name || !location || !time || !phone || !description) {
+                alert('请填写所有必填项！');
+                return;
+            }
+
+            // 手机号简单校验
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                alert('请输入正确的手机号格式！');
+                return;
+            }
+
+            // 这里后续会替换为：fetch请求后端发布接口
+            // 示例：fetch('/api/item/publish', { method: 'POST', body: formData })
+            alert('发布成功！等待管理员审核后展示');
+            // 发布成功后跳转到查询页
+            window.location.href = 'search.html';
+        });
+    </script>
+</body>
+
+</html>
